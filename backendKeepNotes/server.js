@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 // creating express app
 const app = express();
 
@@ -16,6 +17,9 @@ const routes = require("./routes/routes");
 app.use(bodyParser.urlencoded({extended: true}));
 // parsing requests of content type application/JSON
 app.use(bodyParser.json());
+
+//using morgan for getting logs 
+app.use(morgan("tiny"));
 
 //connecting db
 connectionDb();
