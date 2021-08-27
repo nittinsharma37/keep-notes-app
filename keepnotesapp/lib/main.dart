@@ -8,102 +8,51 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return const MaterialApp(
+      title: "Keep Notes",
+      home: HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+class _HomePageState extends State<HomePage> {
+  var responseData = "Dummy data";
+  _makeRequest() async {
+  final response =  await http.get(Uri.parse("http://192.168.32.168:3500/api/keepNotes"));
+  setState(() {
+    responseData = response.body;
+  });
   }
 
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
-
-  void _makeApiRequest() async {
-    try {
-      var requestResponse =
-          await http.get(Uri.parse("http://10.0.2.2:3500/api/keepNotes"));
-      print(requestResponse.toString());
-    } catch (e) {
-      print(e.toString());
-    }
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-              onPressed: _incrementCounter,
-              tooltip: 'Increment',
-              child: const Icon(Icons.add),
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            FloatingActionButton(
-              onPressed: _decrementCounter,
-              tooltip: 'Decrement',
-              child: const Icon(Icons.remove),
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            ElevatedButton(
-              onPressed: _makeApiRequest,
-              child: Row(
-                children: const [
-                  Text("Make request  "),
-                  Icon(Icons.http),
-                ],
-              ),
-            ),
-          ],
-        ));
+      appBar: AppBar(
+        title:  const Text("Keep Notes"),
+      ),
+      body:  Center(
+        child: Text(responseData),
+      ),
+      floatingActionButton: ElevatedButton(
+        onPressed: () {
+         _makeRequest();
+        },
+        child: const Text("Make request!"),
+      ),
+    );
   }
 }
