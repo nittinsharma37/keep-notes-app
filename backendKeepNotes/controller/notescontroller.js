@@ -40,7 +40,9 @@ exports.showAllNotes = (req, res) => {
                 message: "Item not found"
             });
         } else {
-            res.send(data);
+            res.send({
+                data: data
+            });
         }
 
     }).catch((err) => {
