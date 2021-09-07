@@ -84,7 +84,6 @@ class Note {
     );
 
     Map<String, dynamic> toJson() => {
-
         "title": title,
         "content": content,
     };
